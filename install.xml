@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<?xml-stylesheet type="text/xsl" href="modx.prosilver.en.xsl"?>
+<!--NOTICE: Please open this file in your web browser. If presented with a security warning, you may safely tell it to allow the blocked content.-->
+<!--For security purposes, please check: http://www.phpbb.com/mods/ for the latest version of this MOD.\nAlthough MODs are checked before being allowed in the MODs Database there is no guarantee that there are no security problems within the MOD.\nNo support will be given for MODs not found within the MODs Database which can be found at http://www.phpbb.com/mods/-->
+<mod xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.phpbb.com/mods/xml/modx-1.2.3.xsd">
+	<header>
+		<meta name="generator" content="MODX file generated with PP MODX Creator by tumba25"/>
+		<license><![CDATA[http://opensource.org/licenses/gpl-license.php GNU General Public License v2]]></license>
+		<title lang="en"><![CDATA[Github]]></title>
+		<description lang="en"><![CDATA[Adds Github along side the other social links built into phpbb3. adds a UCP input, ACP input, link on viewtopic.php and link in user profile.]]></description>
+		<author-group>
+			<author>
+				<realname><![CDATA[Josh Straitiff]]></realname>
+				<username><![CDATA[JStraitiff]]></username>
+				<homepage><![CDATA[http://www.hackworks.org/]]></homepage>
+				<email><![CDATA[straitiffjr@gmail.com]]></email>
+			</author>
+		</author-group>
+		<mod-version>1.0</mod-version>
+		<installation>
+			<level>intermediate</level>
+			<time>600</time>
+			<target-version>3.0.6</target-version>
+		</installation>
+	</header>
+	<action-group>
+		<sql><![CDATA[ALTER TABLE phpbb_users ADD COLUMN user_github VARCHAR(15) NOT NULL DEFAULT '';]]></sql>
+		<copy>
+			<file from="root/images/github.png" to="root/images/"/>
+		</copy>
+		<open src="memberlist.php">
+			<edit>
+				<find><![CDATA['POSTS_PCT'			=> sprintf($user->lang['POST_PCT'], $percentage),]]></find>
+				<action type="after-add"><![CDATA['GITHUB'         => $member['user_github'],]]></action>
+			</edit>
+			<edit>
+				<find><![CDATA['ICQ'		=> $icq,]]></find>
+				<action type="after-add"><![CDATA['GITHUB'		=> $github,]]></action>
+			</edit>
+			<edit>
+				<find><![CDATA['USER_ICQ'			=> $data['user_icq'],]]></find>
+				<action type="after-add"><![CDATA['USER_GITHUB'			=> $data['user_github'],]]></action>
+			</edit>
+		</open>
+		<open src="viewtopic.php">
+			<edit>
+				<find><![CDATA['joined'		=> '',]]></find>
+				<action type="after-add"><![CDATA['github'		=> '',]]></action>
+			</edit>
+			<edit>
+				<find><![CDATA['from'			=> (!empty($row['user_from'])) ? $row['user_from'] : '',]]></find>
+				<action type="after-add"><![CDATA['github'         => $row['user_github'],]]></action>
+			</edit>
+			<edit>
+				<find><![CDATA['POSTER_JOINED'		=> $user_cache[$poster_id]['joined'],]]></find>
+				<action type="after-add"><![CDATA['POSTER_GITHUB'		=> $user_cache[$poster_id]['github'],]]></action>
+			</edit>
+		</open>
+		<open src="adm/style/acp_users_profile.html">
+			<edit>
+				<find><![CDATA[<legend>{L_USER_PROFILE}</legend>]]></find>
+				<action type="after-add"><![CDATA[<dl>
+	<dt><label for="github">{L_GITHUB}:</label></dt>
+	<dd><input type="text" id="github" name="github" value="{GITHUB}" /></dd>
+</dl>]]></action>
+			</edit>
+		</open>
+		<open src="includes/acp/acp_users.php">
+			<edit>
+				<find><![CDATA['icq'			=> request_var('icq', $user_row['user_icq']),]]></find>
+				<action type="after-add"><![CDATA['github'			=> request_var('github', $user_row['user_github']),]]></action>
+			</edit>
+			<edit>
+				<find><![CDATA['aim'			=> array('string', true, 3, 255),]]></find>
+				<action type="before-add"><![CDATA['github'   => array('string', true, 4, 15),]]></action>
+			</edit>
+			<edit>
+				<find><![CDATA['user_icq'		=> $data['icq'],]]></find>
+				<action type="after-add"><![CDATA['user_github'		=> $data['github'],]]></action>
+			</edit>
+			<edit>
+				<find><![CDATA['ICQ'			=> $data['icq'],]]></find>
+				<action type="after-add"><![CDATA['GITHUB'			=> $data['github'],]]></action>
+			</edit>
+		</open>
+		<open src="includes/ucp/ucp_profile.php">
+			<edit>
+				<find><![CDATA['icq'			=> request_var('icq', $user->data['user_icq']),]]></find>
+				<action type="after-add"><![CDATA['github'			=> request_var('github', $user->data['user_github']),]]></action>
+			</edit>
+			<edit>
+				<find><![CDATA['aim'			=> array('string', true, 3, 255),]]></find>
+				<action type="before-add"><![CDATA['github'   => array('string', true, 4, 15),]]></action>
+			</edit>
+			<edit>
+				<find><![CDATA['user_icq'		=> $data['icq'],]]></find>
+				<action type="after-add"><![CDATA['user_github'		=> $data['github'],]]></action>
+			</edit>
+			<edit>
+				<find><![CDATA['ICQ'		=> $data['icq'],]]></find>
+				<action type="after-add"><![CDATA['GITHUB'		=> $data['github'],]]></action>
+			</edit>
+		</open>
+		<open src="language/en/common.php">
+			<edit>
+				<find><![CDATA['SUBMIT'					=> 'Submit',]]></find>
+				<action type="after-add"><![CDATA['GITHUB'				=> 'Github',
+'VIEW_GITHUB'			=> 'View Github',]]></action>
+			</edit>
+		</open>
+		<open src="styles/prosilver/template/memberlist_view.html">
+			<edit>
+				<find><![CDATA[<!-- IF U_JABBER and S_JABBER_ENABLED --><dt>{L_JABBER}:</dt> <dd><a href="{U_JABBER}" onclick="popup(this.href, 550, 320); return false;">{L_SEND_JABBER_MESSAGE}</a></dd><!-- ELSEIF USER_JABBER --><dt>{L_JABBER}:</dt> <dd>{USER_JABBER}</dd><!-- ENDIF -->]]></find>
+				<action type="after-add"><![CDATA[<!-- IF USER_GITHUB --><dt>{L_GITHUB}:</dt> <dd><a href="http://github.com/{USER_GITHUB}">{L_VIEW_GITHUB}</a></dd><!-- ENDIF -->]]></action>
+			</edit>
+		</open>
+		<open src="styles/prosilver/template/ucp_profile_profile_info.html">
+			<edit>
+				<find><![CDATA[    <dl>
+          <dt><label for="website">{L_WEBSITE}:</label></dt>
+          <dd><input type="text" name="website" id="website" maxlength="255" value="{WEBSITE}" class="inputbox" /></dd>
+       </dl>]]></find>
+				<action type="after-add"><![CDATA[<dl>
+	<dt><label for="github">{L_GITHUB}:</label></dt>
+	<dd><input type="text" name="github" id="github" maxlength="15" value="{GITHUB}" class="inputbox" /></dd>
+</dl>]]></action>
+			</edit>
+		</open>
+		<open src="styles/prosilver/template/viewtopic_body.html">
+			<edit>
+				<find><![CDATA[<span>{L_JABBER}</span></a></li><!-- ENDIF -->]]></find>
+				<action type="after-add"><![CDATA[<!-- IF postrow.POSTER_GITHUB --><li><a href="http://github.com/{postrow.POSTER_GITHUB}"><img src="./images/github.png"  title="{L_GITHUB}" /></a></li><!-- ENDIF -->]]></action>
+			</edit>
+		</open>
+		<diy-instructions lang="en"><![CDATA[Purge Cache]]></diy-instructions>
+	</action-group>
+</mod>
